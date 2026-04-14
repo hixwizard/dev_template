@@ -1,12 +1,15 @@
-FROM node:18-alpine
+FROM node:21.7.1-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+
+RUN npm install --force
 
 COPY . .
 
-EXPOSE 3000
+RUN npm run build
 
-CMD ["npm", "start"]
+RUN npm install --global http-server
+
+CMD ["npx", "-y", "http-server", "-p", "8000", "/app/build"]

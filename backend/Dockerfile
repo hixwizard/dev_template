@@ -1,20 +1,15 @@
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
 WORKDIR /app
 
 # Установка uv
 RUN pip install uv
 
-# Копирование requirements и установка зависимостей
-COPY requirements.txt .
-RUN uv pip install --system -r requirements.txt
-
-# Копирование остальных файлов
 COPY . .
+
+RUN uv pip install --system -r requirements.txt
 
 # Сборка статики
 RUN python manage.py collectstatic --noinput
-
-EXPOSE 8000
 
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]

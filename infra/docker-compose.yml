@@ -1,0 +1,42 @@
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
+  frontend:
+    container_name: frontend
+    env_file: .env
+    build: ../frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  backend:
+    container_name: backend
+    depends_on:
+      - db
+    build: ../backend
+    env_file: .env
+    volumes:
+      - static:/backend_static
+      - media:/app/media
+
+  db:
+    image: postgres:16-alpine
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  nginx:
+    container_name: proxy
+    depends_on:
+      - frontend
+      - backend
+    build: .
+    env_file: .env
+    ports:
+      - 80:80
+    volumes:
+      - static:/staticfiles
+      - media:/app/media
