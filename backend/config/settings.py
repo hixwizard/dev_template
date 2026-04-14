@@ -2,7 +2,6 @@ import os
 
 from pathlib import Path
 
-from decouple import config
 from django.core.management.utils import get_random_secret_key
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -11,7 +10,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default=get_random_secret_key())
 
 DEBUG = os.getenv('DEBUG_MODE', default='False',) == 'False'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=[])
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 #  DOMAIN = os.getenv('DOMAIN')
 
