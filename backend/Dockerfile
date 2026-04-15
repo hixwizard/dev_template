@@ -1,15 +1,16 @@
-FROM python:3.11-alpine
+FROM python:3.12-alpine
 
 WORKDIR /app
 
-# Установка uv
-RUN pip install uv
+COPY requirements.txt .
+
+# Виртуальная установка и очистка
+RUN apk add --no-cache --virtual .build-deps \
+    && pip install --no-cache-dir --compile -r requirements.txt \
+    && apk del .build-deps
 
 COPY . .
 
-RUN uv pip install --system -r requirements.txt
-
-# Сборка статики
 RUN python manage.py collectstatic --noinput
 
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
