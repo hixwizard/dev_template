@@ -1,23 +1,24 @@
 # flake8: noqa
 import os
-
 from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', default=get_random_secret_key())
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = os.getenv('DEBUG_MODE', default='False',) == 'False'
+DEBUG = os.getenv('DEBUG_MODE', default='False') == 'False'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 #  DOMAIN = os.getenv('DOMAIN')
 
-CSRF_TRUSTED_ORIGINS = [
-    os.getenv('CSRF_DOMAIN'),
-]
+# CSRF_TRUSTED_ORIGINS = [os.getenv('CSRF_DOMAIN'),]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -27,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -60,14 +62,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# Определение хоста БД в зависимости от режима
+DB_MODE = os.getenv('DB_MODE')
+if DB_MODE == 'local':
+    DB_HOST = os.getenv('DB_HOST_LOCAL')
+else:
+    DB_HOST = os.getenv('DB_HOST')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'django'),
-        'USER': os.getenv('POSTGRES_USER', 'django'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': DB_HOST,
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
