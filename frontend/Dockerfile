@@ -1,16 +1,9 @@
-FROM node:21.7.1-alpine
-
+FROM node:22-alpine
 WORKDIR /app
 
 COPY package*.json ./
-
-RUN npm install --force
+RUN npm install
 
 COPY . .
-
-RUN npm run build
-
-RUN npm install --global http-server
-
-CMD ["npx", "-y", "http-server", "-a", "0.0.0.0", "-p", "8000", "/app/build"]
-
+EXPOSE 8000
+CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "8000"]
