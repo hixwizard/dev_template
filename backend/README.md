@@ -97,3 +97,5 @@ class CollectViewSet(ModelViewSet):
         collect_create(collect_data)  # используем services.py
         return collect_data
 ```
+посмотреть можно тут:
+https://github.com/HackSoftware/Django-Styleguide
