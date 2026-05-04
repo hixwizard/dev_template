@@ -1,7 +1,10 @@
 services:
   frontend:
-    build: frontend
-    pull_policy: build
+    build:
+      context: frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+#    pull_policy: build
     depends_on:
       - backend
     env_file: .env
@@ -18,7 +21,7 @@ services:
     depends_on:
       - db
     build: backend
-    pull_policy: build
+#    pull_policy: build
     volumes:
       - static:/app/staticfiles
       - media:/app/media
